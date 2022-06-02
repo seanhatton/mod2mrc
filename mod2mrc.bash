@@ -13,8 +13,13 @@ object_list=(membrane synapse mitochondia vesicle)
 for i in "${!object_list[@]}"; do
     obj_num="$(($i + 1))"
     printf "Processing object %s labelled as %s\n" "$obj_num" "${object_list[$i]}"
-    imodextract $obj_num $input_mod ${object_list[$i]}.mod
-    imodmesh -C ${object_list[$i]}.mod
-    imodmop -mask 1 $i.mod $input_mrc ${object_list[$i]}.mrc 
+    outmod="${object_list[$i]}.mod"
+    outmrc="${object_list[$i]}.mrc"
+    printf "Extracting %s from %s\n" "$outmod" "$input_mod"
+    imodextract $obj_num $input_mod $outmod
+    printf "Closing contours in %s\n" "$outmod"
+    imodmesh -C $outmod
+    printf "Converting %s to the binary file %s\n" "$outmod" "$outmrc"
+    imodmop -mask 1 $outmod $input_mrc $outmrc 
 done
-rm *.mod~
+#rm *.mod~
