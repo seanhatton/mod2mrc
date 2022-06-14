@@ -20,6 +20,8 @@ for i in "${!object_list[@]}"; do
     printf "Closing contours in %s\n" "$outmod"
     imodmesh -C $outmod
     printf "Converting %s to the binary file %s\n" "$outmod" "$outmrc"
-    imodmop -mask 1 $outmod $input_mrc $outmrc 
+    imodmop -mask 1 $outmod $input_mrc $outmrc
+    printf "Correcting origin flip"
+    alterheader -to $outmrc
 done
 #rm *.mod~
